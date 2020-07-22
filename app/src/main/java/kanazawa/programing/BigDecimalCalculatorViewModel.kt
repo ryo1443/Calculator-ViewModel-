@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import java.lang.NumberFormatException
+import java.math.BigDecimal
 
-class CalculatorViewModel : ViewModel() {
+class BigDecimalCalculatorViewModel : ViewModel() {
 
     //被演算子を保持する為の変数
-    private var operand1: Double? = null
+    private var operand1: BigDecimal? = null
     private var pendingOperation = "="
 
-    private val result = MutableLiveData<Double>()
+    private val result = MutableLiveData<BigDecimal>()
     val stringResult: LiveData<String>
         get() = Transformations.map(result) { it.toString()}
 
@@ -35,7 +36,7 @@ class CalculatorViewModel : ViewModel() {
 
     fun operandPressed(op: String) {
         try {
-            val value = newNumber.value?.toDouble()
+            val value = newNumber.value?.toBigDecimal()
             if (value != null) {
                 performOperation(value, op)
             }
@@ -52,8 +53,8 @@ class CalculatorViewModel : ViewModel() {
             newNumber.value = "-"
         } else {
             try {
-                var doubleValue = value.toDouble()
-                doubleValue *= -1
+                var doubleValue = value.toBigDecimal()
+                doubleValue *= BigDecimal.valueOf(-1)
                 newNumber.value = doubleValue.toString()
 
             } catch (e: NumberFormatException) {
@@ -64,7 +65,7 @@ class CalculatorViewModel : ViewModel() {
         }
     }
 
-    private fun performOperation(value: Double, operation: String) {
+    private fun performOperation(value: BigDecimal, operation: String) {
         if (operand1 == null) {
             operand1 = value
         } else {
@@ -74,8 +75,8 @@ class CalculatorViewModel : ViewModel() {
 
             when (pendingOperation) {
                 "=" -> operand1 = value
-                "/" -> operand1 = if(value == 0.0) {
-                    Double.NaN
+                "/" -> operand1 = if(value == BigDecimal.valueOf(0.0)) {
+                    BigDecimal.valueOf(Double.NaN)
                 } else {
                     operand1!! / value
                 }

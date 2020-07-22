@@ -14,10 +14,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewModel: CalculatorViewModel by viewModels()
-        viewModel.result.observe(this, Observer<String> { stringResult -> result.setText(stringResult)})
-        viewModel.newNumber.observe(this, Observer<String> { stringNumber -> newNumber.setText(stringNumber)})
-        viewModel.operation.observe(this, Observer<String> { stringOperation -> operation.text = stringOperation})
+//        val viewModel: CalculatorViewModel by viewModels()
+        val viewModel: BigDecimalCalculatorViewModel by viewModels()
+
+        viewModel.stringResult.observe(this, Observer<String> { stringResult -> result.setText(stringResult)})
+        viewModel.stringNewNumber.observe(this, Observer<String> { stringNumber -> newNumber.setText(stringNumber)})
+        viewModel.stringOperation.observe(this, Observer<String> { stringOperation -> operation.text = stringOperation})
 
         val listener = View.OnClickListener { v ->
             viewModel.digitPressed((v as Button).text.toString())
